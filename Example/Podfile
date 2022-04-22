@@ -1,0 +1,15 @@
+use_frameworks!
+
+platform :ios, '12.0'
+
+target 'Tg3dSDK-iOS_Example' do
+  pod 'Tg3dSDK-iOS', :path => '../'
+
+  target 'Tg3dSDK-iOS_Tests' do
+    inherit! :search_paths
+
+    pod 'Quick', '~> 2.2.0'
+    pod 'Nimble', '~> 9.0.0'
+    pod 'I3DRecorder', :git => 'https://github.com/in3D-io/in3D-iOS-SDK.git', :commit => 'c502760'
+  end
+end
