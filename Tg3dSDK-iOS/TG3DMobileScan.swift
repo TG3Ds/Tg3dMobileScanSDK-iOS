@@ -2,13 +2,6 @@ import Foundation
 import I3DRecorder
 import MetalKit
 
-enum GoAfterGirlError:Error {
-    case poorProblem
-    case tooYoungProblem
-    case notAquariusProblem
-    case falseHeartProblem
-}
-
 @objc
 public enum TG3DMobileScanState: Int {
     case inited
@@ -607,6 +600,27 @@ public class TG3DMobileScan: NSObject {
         }
     }
 
+    public func doWaitingForScanningResult(scannerId: String, tid: String, completion: @escaping (Int) -> ()) {
+        let url = String(format:"%@/api/v1/scanners/%@/%@/wait_finish?version=4&apikey=%@",arguments:[self.baseUrl, scannerId, tid, self.apiKey])
+        do {
+            let header = [ "Content-Type": "application/json", "X-User-Access-Token": self.accessToken ]
+            let body = [ String: String ]()
+            try self.doAPIHttpPost(url: url, header: header, body: body) { (rc, data, response) in
+                if rc != 0 {
+                    completion(rc)
+                    return
+                }
+                completion(0)
+            }
+
+        } catch {
+            self.lastErrorCode = -1
+            self.lastErrorMsg = error.localizedDescription
+            completion(self.lastErrorCode)
+            return
+        }
+    }
+
     @objc
     func registerByEmail(email: String,
                          password: String,
@@ -694,10 +708,10 @@ public class TG3DMobileScan: NSObject {
     public func initMobileScan(scannerId: String,
                                sessionKey: String,
                                userHeight: Int,
-                               completion: @escaping (Int) -> ()) {
+                               completion: @escaping (Int, String?) -> ()) {
         self.doInitScanner(scannerId: scannerId, sessionKey: sessionKey) { (rc, result) in
             if rc != 0 {
-                completion(rc)
+                completion(rc, nil)
                 return
             }
 
@@ -714,20 +728,20 @@ public class TG3DMobileScan: NSObject {
                 sequence: self.recording!.bodySequence,
                 height: userHeight
             )
-            completion(0)
+            completion(0, self.tid)
         }
     }
 
     @objc
-    public func prepareForRecord(preview: MTKView, completion: @escaping ((TG3DIn3DInitError) -> Void)) {
+    public func prepareForRecord(preview: MTKView, completion: @escaping ((Int) -> Void)) {
         if self.recorder != nil {
             self.recorder!.delegate = self
             self.recorder!.previewView = preview
             self.recorder!.prepareForRecord(imageFilter: nil, sensorFilter: nil) { error in
-                completion((error as? I3DRecordInitError)?.toTG3DIn3DInitError() ?? .none)
+                completion(((error as? I3DRecordInitError)?.toTG3DIn3DInitError() ?? .none).rawValue)
             }
         } else {
-            completion(TG3DIn3DInitError.scanNotInited)
+            completion(TG3DIn3DInitError.scanNotInited.rawValue)
         }
     }
 
@@ -744,10 +758,10 @@ public class TG3DMobileScan: NSObject {
     }
 
     @objc
-    public func stopRecording(completion: @escaping ((Error?, URL?) -> Void)) {
+    public func stopRecording(completion: @escaping ((Int, URL?) -> Void)) {
         if self.recorder != nil {
-            self.recorder!.stopRecord(){ (sequence, error) in
-                completion(error, sequence?.rgb)
+            self.recorder!.stopRecord() { (sequence, error) in
+                completion(((error as? I3DRecordInitError)?.toTG3DIn3DInitError() ?? .none).rawValue, sequence?.rgb)
             }
         }
     }
@@ -755,7 +769,7 @@ public class TG3DMobileScan: NSObject {
     @objc
     public func uploadScans(
         progress: @escaping (Double, Int64) -> (),
-        completion: @escaping (String?, Error?) -> ()
+        completion: @escaping (Int, String?) -> ()
     ) {
         do {
             try scanService.recorded(recording: self.recording!)
@@ -764,12 +778,19 @@ public class TG3DMobileScan: NSObject {
                 recording: self.recording!.id,
                 progress: progress,
                 completion: { (scan, error) in
-                    completion(scan?.callbackURL, error)
+                    completion(((error as? I3DRecordInitError)?.toTG3DIn3DInitError() ?? .none).rawValue, scan?.callbackURL)
                 }
             )
         } catch {
-            completion(nil, error)
+            completion(((error as? I3DRecordInitError)?.toTG3DIn3DInitError() ?? .none).rawValue, nil)
             print(error)
+        }
+    }
+
+    @objc
+    public func waitingForScanningResult(scannerId: String, tid: String, completion: @escaping (Int) -> ()) {
+        self.doWaitingForScanningResult(scannerId: scannerId, tid: tid) { (rc) in
+            completion(rc)
         }
     }
 
@@ -850,11 +871,11 @@ extension TG3DMobileScan: RecorderDelegate {
 
 @objc
 public enum TG3DIn3DInitError: Int {
-    case none
-    case scanNotInited
-    case cameraSetupError
-    case cameraAccessDenied
-    case cameraAccessRestricted
+    case none                    = 0
+    case scanNotInited           = -1001
+    case cameraSetupError        = -1002
+    case cameraAccessDenied      = -1003
+    case cameraAccessRestricted  = -1004
 }
 
 public extension I3DRecordInitError {

@@ -14,6 +14,7 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		6B61DBA3282A80B500D457EB /* ZIPFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B61DBA2282A80B500D457EB /* ZIPFoundation.framework */; };
 		6BAA2F542812B4E100483A2A /* I3DRecorder.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BAA2F532812B4E100483A2A /* I3DRecorder.xcframework */; };
 		6BAA2F562812B53100483A2A /* URLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BAA2F552812B53100483A2A /* URLRequest.swift */; };
 		6BAA2F58281646ED00483A2A /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BAA2F57281646ED00483A2A /* XCTest.framework */; settings = {ATTRIBUTES = (Required, ); }; };
@@ -46,6 +47,9 @@
 		607FACE51AFB9204008FA782 /* Tg3dSDK-iOS_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tg3dSDK-iOS_Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
+		6B61DB9D282A7ECD00D457EB /* ZIPFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ZIPFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6B61DB9F282A804E00D457EB /* ZIPFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ZIPFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6B61DBA2282A80B500D457EB /* ZIPFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ZIPFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BAA2F532812B4E100483A2A /* I3DRecorder.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = I3DRecorder.xcframework; path = Pods/I3DRecorder/I3DRecorder.xcframework; sourceTree = "<group>"; };
 		6BAA2F552812B53100483A2A /* URLRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLRequest.swift; path = "../Tg3dSDK-iOS/URLRequest.swift"; sourceTree = "<group>"; };
 		6BAA2F57281646ED00483A2A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -65,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B61DBA3282A80B500D457EB /* ZIPFoundation.framework in Frameworks */,
 				6BAA2F542812B4E100483A2A /* I3DRecorder.xcframework in Frameworks */,
 				A5513A63D7B4B3B93F7F69B4 /* Pods_Tg3dSDK_iOS_Example.framework in Frameworks */,
 			);
@@ -157,6 +162,9 @@
 		66D344BAFF6756D645BD29EC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6B61DBA2282A80B500D457EB /* ZIPFoundation.framework */,
+				6B61DB9F282A804E00D457EB /* ZIPFoundation.framework */,
+				6B61DB9D282A7ECD00D457EB /* ZIPFoundation.framework */,
 				6BAA2F5B2816519000483A2A /* Tg3dSDK_iOS.framework */,
 				6BAA2F57281646ED00483A2A /* XCTest.framework */,
 				6BAA2F532812B4E100483A2A /* I3DRecorder.xcframework */,
@@ -312,13 +320,11 @@
 				"${PODS_ROOT}/Target Support Files/Pods-Tg3dSDK-iOS_Tests/Pods-Tg3dSDK-iOS_Tests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Nimble/Nimble.framework",
 				"${BUILT_PRODUCTS_DIR}/Quick/Quick.framework",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/I3DRecorder/I3DRecorder.framework/I3DRecorder",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Quick.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/I3DRecorder.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -355,10 +361,14 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Tg3dSDK-iOS_Example/Pods-Tg3dSDK-iOS_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Tg3dSDK-iOS/Tg3dSDK_iOS.framework",
+				"${BUILT_PRODUCTS_DIR}/ZIPFoundation/ZIPFoundation.framework",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/I3DRecorder/I3DRecorder.framework/I3DRecorder",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Tg3dSDK_iOS.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ZIPFoundation.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/I3DRecorder.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
