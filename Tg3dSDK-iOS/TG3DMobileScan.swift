@@ -52,6 +52,76 @@ public class ScanRecord: NSObject {
     var updatedAt: String? = nil
 }
 
+
+func doHttpHead(url:String,
+                header: Dictionary<String, String>,
+                completion: @escaping (Data?, URLResponse?, Error?) -> ()) throws {
+    let request: URLRequest
+    request = try URLRequest.createRequest(
+        method: .head,
+        url: URL(string: url)!,
+        parameters: nil,
+        header: header,
+        body: nil,
+        encoding: .json
+    )
+    let session = URLSession.shared
+    let task = session.dataTask(with: request) { (data, response, error) in
+        completion(data, response, error)
+    }
+    task.resume()
+}
+
+func doHttpGet(url:String,
+               header: Dictionary<String, String>,
+               completion: @escaping (Data?, URLResponse?, Error?) -> ()) throws {
+    let request: URLRequest
+    request = try URLRequest.createRequest(
+        method: .get,
+        url: URL(string: url)!,
+        parameters: nil,
+        header: header,
+        body: nil,
+        encoding: .json
+    )
+    let session = URLSession.shared
+    let task = session.dataTask(with: request) { (data, response, error) in
+        completion(data, response, error)
+    }
+    task.resume()
+}
+
+func retrieveRegion(useDev: Bool = false, completion: @escaping (Int, String?) -> ()) {
+  let url = "https://apiselector.tg3ds.com"
+  do {
+      let header = [ String: String ]()
+      try doHttpHead(url: url, header: header) { (data, response, error) in
+          if error != nil {
+              completion(-1, nil)
+              return
+          }
+          guard let response = response as? HTTPURLResponse else {
+              completion(-1, nil)
+              return
+          }
+
+          var baseUrl = ""
+          if let location = response.allHeaderFields["Location"] as? String {
+              baseUrl = location
+          } else {
+              var components = URLComponents()
+              components.scheme = response.url!.scheme
+              components.host = response.url!.host
+              baseUrl = components.url!.absoluteString
+          }
+          completion(0, baseUrl)
+      }
+
+  } catch {
+      return
+  }
+}
+
 @objc
 public class TG3DMobileScan: NSObject {
     @objc public var apiKey: String
@@ -87,48 +157,29 @@ public class TG3DMobileScan: NSObject {
         super.init()
     }
 
-    func doHttpHead(url:String,
-                    header: Dictionary<String, String>,
-                    completion: @escaping (Data?, URLResponse?, Error?) -> ()) throws {
-        let request: URLRequest
-        request = try URLRequest.createRequest(
-            method: .head,
-            url: URL(string: url)!,
-            parameters: nil,
-            header: header,
-            body: nil,
-            encoding: .json
-        )
-        let session = URLSession.shared
-        let task = session.dataTask(with: request) { (data, response, error) in
-            completion(data, response, error)
-        }
-        task.resume()
+    @objc
+    func setup(baseUrl: String = "https://api.tg3ds.com") {
+        self.baseUrl = baseUrl
     }
 
-    func doHttpGet(url:String,
-                   header: Dictionary<String, String>,
-                   completion: @escaping (Data?, URLResponse?, Error?) -> ()) throws {
-        let request: URLRequest
-        request = try URLRequest.createRequest(
-            method: .get,
-            url: URL(string: url)!,
-            parameters: nil,
-            header: header,
-            body: nil,
-            encoding: .json
-        )
-        let session = URLSession.shared
-        let task = session.dataTask(with: request) { (data, response, error) in
-            completion(data, response, error)
+    @objc
+    func currentRegion(useDev: Bool = false, completion: @escaping (Int, String) -> ()) {
+        retrieveRegion(useDev: useDev) { (rc, url) in
+            var baseUrl = "https://api.tg3ds.com"
+            if rc == 0 {
+                baseUrl = url!
+            }
+            if useDev {
+                baseUrl = baseUrl.replacingOccurrences(of:"api.", with: "apidev.")
+            }
+            completion(0, baseUrl)
         }
-        task.resume()
     }
 
     func doAPIHttpGet(url:String,
                       header: Dictionary<String, String>,
                       completion: @escaping (Int, Data?, HTTPURLResponse?) -> ()) throws {
-        try self.doHttpGet(url: url, header: header) { (data, response, error) in
+        try doHttpGet(url: url, header: header) { (data, response, error) in
             if error != nil {
                 self.lastErrorCode = -1
                 self.lastErrorMsg = "Unknown error (got error from http request)"
@@ -534,7 +585,7 @@ public class TG3DMobileScan: NSObject {
         let url = String(format:"%@/api/v1/scan_records/%@/obj?apikey=%@",arguments:[self.baseUrl, tid, self.apiKey])
         do {
             let header = [ "X-User-Access-Token": self.accessToken ]
-            try self.doHttpHead(url: url, header: header) { (data, response, error) in
+            try doHttpHead(url: url, header: header) { (data, response, error) in
                 if error != nil {
                     self.lastErrorCode = -1
                     self.lastErrorMsg = "Unknown error (got error from http request)"

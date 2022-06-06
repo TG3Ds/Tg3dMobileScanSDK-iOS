@@ -42,8 +42,12 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         if self.sdk == nil {
-            self.sdk = TG3DMobileScan(apiKey: self.apiKey,
-                                      baseUrl: "https://apidev.tg3ds.com")
+            self.sdk = TG3DMobileScan(apiKey: self.apiKey)
+            self.sdk!.currentRegion(useDev: false) { (rc, baseUrl) in
+                if rc == 0 {
+                    self.sdk!.setup(baseUrl: baseUrl)
+                }
+            }
         }
         if self.currentSegue == "showMainPage" {
             if self.userProfile != nil {
@@ -136,6 +140,7 @@ class ViewController: UIViewController {
                                      sessionKey: self.sessionKey,
                                      userHeight: userHeight) { (rc, tid) in
                 self.tid = tid!
+                // TODO: handle if rc = 40306: 'Number of scans over limit'
                 print(String(format: "initMobileScan(), rc = %d, tid: %@", rc, tid!))
                 self.previewView.depthStencilPixelFormat = .invalid
                 self.sdk!.prepareForRecord(preview: self.previewView) { (rc) in
