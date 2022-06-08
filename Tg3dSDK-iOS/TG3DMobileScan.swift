@@ -135,7 +135,7 @@ public class TG3DMobileScan: NSObject {
     @objc public var tid: String?
     @objc public var in3dId: String?
 
-    var scanService: ScanService = I3DScanService()
+    var scanService: ScanService = I3DScanService.shared
     var recorder: Recorder?
     var recording: ScanRecording?
     var settings: RecorderSettings?
@@ -768,17 +768,16 @@ public class TG3DMobileScan: NSObject {
 
             self.tid = result!["tid"] as? String
             self.in3dId = result!["in3d_id"] as? String
-
-            self.settings = I3DRecorderSettings(
-                exposureMode: .auto((value: Int64(1), timescale: Int32(100))),
-                fps: 10
-            )
             self.recording = self.scanService.newRecording(withHead: false)
             self.recorder = ScanRecorder(
-                settings: self.settings!,
-                sequence: self.recording!.bodySequence,
+                sequence: self.recording!.bodySequence!,
                 height: userHeight
             )
+            if self.recorder!.canUse(camera: CameraType.trueDepth, for: .body) {
+                self.settings = I3DRecorderSettings(cameraType: .trueDepth)
+            } else {
+                self.settings = I3DRecorderSettings(cameraType: .rgbFront)
+            }
             completion(0, self.tid)
         }
     }
@@ -788,7 +787,7 @@ public class TG3DMobileScan: NSObject {
         if self.recorder != nil {
             self.recorder!.delegate = self
             self.recorder!.previewView = preview
-            self.recorder!.prepareForRecord(imageFilter: nil, sensorFilter: nil) { error in
+            self.recorder!.prepareForRecord(with: self.settings!, imageFilter: nil, sensorFilter: nil) { error in
                 completion(((error as? I3DRecordInitError)?.toTG3DIn3DInitError() ?? .none).rawValue)
             }
         } else {
