@@ -1,10 +1,5 @@
 # Tg3dSDK-iOS
 
-[![CI Status](https://img.shields.io/travis/Wukon Hsieh/Tg3dSDK-iOS.svg?style=flat)](https://travis-ci.org/Wukon Hsieh/Tg3dSDK-iOS)
-[![Version](https://img.shields.io/cocoapods/v/Tg3dSDK-iOS.svg?style=flat)](https://cocoapods.org/pods/Tg3dSDK-iOS)
-[![License](https://img.shields.io/cocoapods/l/Tg3dSDK-iOS.svg?style=flat)](https://cocoapods.org/pods/Tg3dSDK-iOS)
-[![Platform](https://img.shields.io/cocoapods/p/Tg3dSDK-iOS.svg?style=flat)](https://cocoapods.org/pods/Tg3dSDK-iOS)
-
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
@@ -22,7 +17,7 @@ pod 'Tg3dSDK-iOS'
 
 ## Author
 
-Wukon Hsieh, wukon.hsieh@tg3ds.com
+TG3D Developer, tg3ddeveloper@tg3ds.com
 
 ## License
 
