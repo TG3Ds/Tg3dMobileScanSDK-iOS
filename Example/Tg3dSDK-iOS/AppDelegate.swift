@@ -1,11 +1,3 @@
-//
-//  AppDelegate.swift
-//  Tg3dSDK-iOS
-//
-//  Created by Wukon Hsieh on 04/22/2022.
-//  Copyright (c) 2022 Wukon Hsieh. All rights reserved.
-//
-
 import UIKit
 
 @UIApplicationMain
@@ -43,4 +35,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
-
