@@ -95,6 +95,18 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Requirements
 
+Since mobile scan we use In3D solution, you need to install in3D-iOS-SDK.
+
+```ruby
+pod 'I3DRecorder', :git => 'https://github.com/in3D-io/in3D-iOS-SDK.git'
+```
+
+or, with a specific version
+
+```ruby
+pod 'I3DRecorder', :git => 'https://github.com/in3D-io/in3D-iOS-SDK.git', :commit => 'ecacda7'
+```
+
 ## Installation
 
 Tg3dSDK-iOS is available through [CocoaPods](https://cocoapods.org). To install
