@@ -59,7 +59,7 @@ class ViewController: UIViewController {
                     print(String(format: "getObj(), rc = %d", rc))
                     print(String(format: "Obj URL: %@", url!))
 
-                    // TODO: download zipped obj and show with viewer
+                    // download zipped obj and show with viewer
                     // get path of directory
                     guard let directory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
                         return
