@@ -3,6 +3,8 @@ import MetalKit
 import Tg3dSDK_iOS
 import SceneKit
 import ZIPFoundation
+import AVFoundation
+import AVKit
 
 class ViewController: UIViewController {
 
@@ -19,6 +21,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var previewView: MTKView!
     @IBOutlet weak var startScanButton: UIButton!
 
+    @IBOutlet weak var previewVideoView: MTKView!
+    @IBOutlet weak var uploadButton: UIButton!
+
     let apiKey: String = "" // your apikey
     let scannerId: String = "" // your scanner ID
     let sessionKey: String = "" // your session key
@@ -29,13 +34,15 @@ class ViewController: UIViewController {
     var currentSegue: String = ""
     var isScanning: Bool = false
     var tid: String = ""
+    var previewVidelUrl: URL?
+    var player: AVPlayer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         if self.sdk == nil {
             self.sdk = TG3DMobileScan(apiKey: self.apiKey)
-            self.sdk!.currentRegion(useDev: false) { (rc, baseUrl) in
+            self.sdk!.currentRegion() { (rc, baseUrl) in
                 if rc == 0 {
                     self.sdk!.setup(baseUrl: baseUrl)
                 }
@@ -173,6 +180,18 @@ class ViewController: UIViewController {
                 }
             }
         }
+        if self.currentSegue == "showPreviewVideo" {
+            self.player = AVPlayer(url: self.previewVidelUrl!)
+            DispatchQueue.main.async(execute: {() -> Void in
+                let playerLayer = AVPlayerLayer(player: self.player!)
+                playerLayer.frame = self.previewVideoView.bounds
+                playerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+                playerLayer.zPosition = 1
+                self.previewVideoView.layer.addSublayer(playerLayer)
+                self.player?.seek(to: kCMTimeZero)
+                self.player?.play()
+            })
+        }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -181,6 +200,7 @@ class ViewController: UIViewController {
             destinationViewController.sdk = self.sdk
             destinationViewController.userProfile = self.userProfile
             destinationViewController.lastScanRecord = self.lastScanRecord
+            destinationViewController.previewVidelUrl = self.previewVidelUrl
             destinationViewController.currentSegue = segue.identifier!
         }
     }
@@ -258,21 +278,29 @@ class ViewController: UIViewController {
                         timer.invalidate() // stop timer
                         DispatchQueue.main.async {
                             self.isScanning = false
-                            self.startScanButton.setTitle("Uploading", for: .normal)
-                            self.startScanButton.isEnabled = false
-
-                            self.sdk!.stopRecording() { (rc, _) in
-                                print("stopRecording, rc = %d", rc)
-                                self.sdk!.uploadScans(progress: { (progress, totalSize) in
-                                    print(String(format: "progress: %f (total: %d)", progress, totalSize))
-                                }, completion: { (rc, _) in
-                                    print("uploadScans completed, rc = %d", rc)
+                            self.sdk!.stopRecording() { (rc, url) in
+                                if rc == 0 {
+                                    print(String(format: "stopRecording, rc = %d, url: %@", rc, url!.absoluteString))
+                                    self.previewVidelUrl = url!
                                     DispatchQueue.main.async {
+                                        self.performSegue(withIdentifier: "showPreviewVideo", sender: self)
+                                    }
+                                } else {
+                                    print(String(format: "stopRecording, rc = %d", rc))
+                                    DispatchQueue.main.async {
+                                        let alertController = UIAlertController(title: String(format: "Error code: %d", rc),
+                                                                                message: "Scan failed, please check the error code.",
+                                                                                preferredStyle: .alert)
+                                        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                                        alertController.addAction(okAction)
+                                        self.present(alertController, animated: true, completion: nil)
+
+                                        // back to main page
                                         self.startScanButton.setTitle("Start", for: .normal)
                                         self.startScanButton.isEnabled = true
                                         self.performSegue(withIdentifier: "backMainPage", sender: self)
                                     }
-                                })
+                                }
                             }
                         }
                     }
@@ -285,20 +313,50 @@ class ViewController: UIViewController {
                 self.startScanButton.setTitle("Uploading", for: .normal)
                 self.startScanButton.isEnabled = false
 
-                self.sdk!.stopRecording() { (rc, _) in
-                    print("stopRecording, rc = %d", rc)
-                    self.sdk!.uploadScans(progress: { (progress, totalSize) in
-                        print(String(format: "progress: %f (total: %d)", progress, totalSize))
-                    }, completion: { (rc, _) in
-                        print("uploadScans completed, rc = %d", rc)
+                self.sdk!.stopRecording() { (rc, url) in
+                    if rc == 0 {
+                        print(String(format: "stopRecording, rc = %d, url: %@", rc, url!.absoluteString))
+                        self.previewVidelUrl = url!
                         DispatchQueue.main.async {
+                            self.performSegue(withIdentifier: "showPreviewVideo", sender: self)
+                        }
+                    } else {
+                        print(String(format: "stopRecording, rc = %d", rc))
+                        DispatchQueue.main.async {
+                            let alertController = UIAlertController(title: String(format: "Error code: %d", rc),
+                                                                    message: "Scan failed, please check the error code.",
+                                                                    preferredStyle: .alert)
+                            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                            alertController.addAction(okAction)
+                            self.present(alertController, animated: true, completion: nil)
+
+                            // back to main page
                             self.startScanButton.setTitle("Start", for: .normal)
                             self.startScanButton.isEnabled = true
                             self.performSegue(withIdentifier: "backMainPage", sender: self)
                         }
-                    })
+                    }
                 }
             }
         }
+    }
+
+    @IBAction func startUploadOnClick(_ sender: Any) {
+        self.uploadButton.setTitle("Uploading", for: .normal)
+        self.uploadButton.isEnabled = false
+        self.sdk!.uploadScans(progress: { (progress, totalSize) in
+            print(String(format: "progress: %f (total: %d)", progress, totalSize))
+        }, completion: { (rc, _) in
+            print("uploadScans completed, rc = %d", rc)
+            DispatchQueue.main.async {
+                self.uploadButton.setTitle("Upload", for: .normal)
+                self.uploadButton.isEnabled = true
+                self.performSegue(withIdentifier: "showUploadFinishedPage", sender: self)
+            }
+        })
+    }
+
+    @IBAction func backToMainPageOnClicked(_ sender: Any) {
+        self.performSegue(withIdentifier: "finishedAndBackMainPage", sender: self)
     }
 }

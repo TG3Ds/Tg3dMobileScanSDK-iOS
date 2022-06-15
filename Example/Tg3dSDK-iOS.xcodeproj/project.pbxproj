@@ -54,6 +54,7 @@
 		6BAA2F552812B53100483A2A /* URLRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLRequest.swift; path = "../Tg3dSDK-iOS/URLRequest.swift"; sourceTree = "<group>"; };
 		6BAA2F57281646ED00483A2A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		6BAA2F5B2816519000483A2A /* Tg3dSDK_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Tg3dSDK_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6BD5674B2859B89400C72B3F /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		6BEAC2D22812B29300AD08C3 /* TG3DMobileScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TG3DMobileScan.swift; path = "../Tg3dSDK-iOS/TG3DMobileScan.swift"; sourceTree = "<group>"; };
 		6C3EDA50E2F182C282268FD4 /* Pods-Tg3dSDK-iOS_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tg3dSDK-iOS_Tests.debug.xcconfig"; path = "Target Support Files/Pods-Tg3dSDK-iOS_Tests/Pods-Tg3dSDK-iOS_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		83706C1EEBBD4FC6CA31673B /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
@@ -162,6 +163,7 @@
 		66D344BAFF6756D645BD29EC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6BD5674B2859B89400C72B3F /* MediaPlayer.framework */,
 				6B61DBA2282A80B500D457EB /* ZIPFoundation.framework */,
 				6B61DB9F282A804E00D457EB /* ZIPFoundation.framework */,
 				6B61DB9D282A7ECD00D457EB /* ZIPFoundation.framework */,
