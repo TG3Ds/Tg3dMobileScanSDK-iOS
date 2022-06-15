@@ -125,14 +125,47 @@ class ViewController: UIViewController {
         }
         if self.currentSegue == "showScanPage" {
             var userHeight = self.userProfile!.height
+            // NOTE: User height is required, it impacts scan result!
+            //       Please make sure the user height is correct.
             if userHeight <= 0 {
                 userHeight = 180
             }
             self.sdk!.initMobileScan(scannerId: self.scannerId,
                                      sessionKey: self.sessionKey,
                                      userHeight: userHeight) { (rc, tid) in
+                if rc != 0 {
+                    // NOTE: Mobile scan is limited to 3 scans per month per user,
+                    // handle if rc = 40306: 'Number of scans over limit'
+                    if rc == 40306 {
+                        DispatchQueue.main.async {
+                            let alertController = UIAlertController(title: String(format: "Error code: %d", rc),
+                                                                    message: "Number of scans over limit",
+                                                                    preferredStyle: .alert)
+                            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                            alertController.addAction(okAction)
+                            self.present(alertController, animated: true, completion: nil)
+
+                            // back to main page
+                            self.startScanButton.isEnabled = true
+                            self.performSegue(withIdentifier: "backMainPage", sender: self)
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            let alertController = UIAlertController(title: String(format: "Error code: %d", rc),
+                                                                    message: "Failed to init mobile scan",
+                                                                    preferredStyle: .alert)
+                            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                            alertController.addAction(okAction)
+                            self.present(alertController, animated: true, completion: nil)
+
+                            // back to main page
+                            self.startScanButton.isEnabled = true
+                            self.performSegue(withIdentifier: "backMainPage", sender: self)
+                        }
+                    }
+                    return
+                }
                 self.tid = tid!
-                // TODO: handle if rc = 40306: 'Number of scans over limit'
                 print(String(format: "initMobileScan(), rc = %d, tid: %@", rc, tid!))
                 self.previewView.depthStencilPixelFormat = .invalid
                 self.sdk!.prepareForRecord(preview: self.previewView) { (rc) in
@@ -195,7 +228,6 @@ class ViewController: UIViewController {
                         self.signinButton.isEnabled = true
                     }
                 }
-
             }
         }
     }
@@ -234,23 +266,18 @@ class ViewController: UIViewController {
                                 self.sdk!.uploadScans(progress: { (progress, totalSize) in
                                     print(String(format: "progress: %f (total: %d)", progress, totalSize))
                                 }, completion: { (rc, _) in
-                                    print("uploadScans, rc = %d", rc)
-                                    // TODO: polling and waiting for scanning request
-                                    self.sdk!.waitingForScanningResult(scannerId: self.scannerId, tid: self.tid) { (rc) in
-                                        print(String(format: "waitingForScanningResult, rc = %d", rc))
-                                        DispatchQueue.main.async {
-                                            self.startScanButton.setTitle("Start", for: .normal)
-                                            self.startScanButton.isEnabled = true
-                                            self.performSegue(withIdentifier: "backMainPage", sender: self)
-                                        }
+                                    print("uploadScans completed, rc = %d", rc)
+                                    DispatchQueue.main.async {
+                                        self.startScanButton.setTitle("Start", for: .normal)
+                                        self.startScanButton.isEnabled = true
+                                        self.performSegue(withIdentifier: "backMainPage", sender: self)
                                     }
                                 })
                             }
                         }
                     }
                 }
-
-            }
+            } // timer
 
         } else {
             DispatchQueue.main.async {
@@ -258,11 +285,12 @@ class ViewController: UIViewController {
                 self.startScanButton.setTitle("Uploading", for: .normal)
                 self.startScanButton.isEnabled = false
 
-                self.sdk!.stopRecording() { (_, _) in
+                self.sdk!.stopRecording() { (rc, _) in
+                    print("stopRecording, rc = %d", rc)
                     self.sdk!.uploadScans(progress: { (progress, totalSize) in
                         print(String(format: "progress: %f (total: %d)", progress, totalSize))
-                    }, completion: { (_, err) in
-                        // TODO: polling and waiting for scanning request
+                    }, completion: { (rc, _) in
+                        print("uploadScans completed, rc = %d", rc)
                         DispatchQueue.main.async {
                             self.startScanButton.setTitle("Start", for: .normal)
                             self.startScanButton.isEnabled = true
