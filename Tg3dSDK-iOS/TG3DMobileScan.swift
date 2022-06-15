@@ -3,11 +3,20 @@ import I3DRecorder
 import MetalKit
 
 @objc
+public enum TG3DIn3DInitError: Int {
+    case none                    = 0
+    case scanNotInited           = -1001
+    case cameraSetupError        = -1002
+    case cameraAccessDenied      = -1003
+    case cameraAccessRestricted  = -1004
+}
+
+/// Wrapper for RecordState
+@objc
 public enum TG3DMobileScanState: Int {
-    case inited
-    case user_ready
-    case scanner_inited
+    case ready
     case scanning
+    case finished
 }
 
 @objc
@@ -91,35 +100,55 @@ func doHttpGet(url:String,
     task.resume()
 }
 
+func doHttpPost(url:String,
+                header: Dictionary<String, String>,
+                body: Dictionary<String, Any>,
+                completion: @escaping (Data?, URLResponse?, Error?) -> ()) throws {
+    let request: URLRequest
+    request = try URLRequest.createRequest(
+        method: .post,
+        url: URL(string: url)!,
+        parameters: nil,
+        header: header,
+        body: body,
+        encoding: .json
+    )
+    let session = URLSession.shared
+    let task = session.dataTask(with: request) { (data, response, error) in
+        completion(data, response, error)
+    }
+    task.resume()
+}
+
 func retrieveRegion(useDev: Bool = false, completion: @escaping (Int, String?) -> ()) {
-  let url = "https://apiselector.tg3ds.com"
-  do {
-      let header = [ String: String ]()
-      try doHttpHead(url: url, header: header) { (data, response, error) in
-          if error != nil {
-              completion(-1, nil)
-              return
-          }
-          guard let response = response as? HTTPURLResponse else {
-              completion(-1, nil)
-              return
-          }
+    let url = "https://apiselector.tg3ds.com"
+    do {
+        let header = [ String: String ]()
+        try doHttpHead(url: url, header: header) { (data, response, error) in
+            if error != nil {
+                completion(-1, nil)
+                return
+            }
+            guard let response = response as? HTTPURLResponse else {
+                completion(-1, nil)
+                return
+            }
 
-          var baseUrl = ""
-          if let location = response.allHeaderFields["Location"] as? String {
-              baseUrl = location
-          } else {
-              var components = URLComponents()
-              components.scheme = response.url!.scheme
-              components.host = response.url!.host
-              baseUrl = components.url!.absoluteString
-          }
-          completion(0, baseUrl)
-      }
+            var baseUrl = ""
+            if let location = response.allHeaderFields["Location"] as? String {
+                baseUrl = location
+            } else {
+                var components = URLComponents()
+                components.scheme = response.url!.scheme
+                components.host = response.url!.host
+                baseUrl = components.url!.absoluteString
+            }
+            completion(0, baseUrl)
+        }
 
-  } catch {
-      return
-  }
+    } catch {
+        return
+    }
 }
 
 @objc
@@ -228,31 +257,11 @@ public class TG3DMobileScan: NSObject {
         }
     }
 
-    func doHttpPost(url:String,
-                    header: Dictionary<String, String>,
-                    body: Dictionary<String, Any>,
-                    completion: @escaping (Data?, URLResponse?, Error?) -> ()) throws {
-        let request: URLRequest
-        request = try URLRequest.createRequest(
-            method: .post,
-            url: URL(string: url)!,
-            parameters: nil,
-            header: header,
-            body: body,
-            encoding: .json
-        )
-        let session = URLSession.shared
-        let task = session.dataTask(with: request) { (data, response, error) in
-            completion(data, response, error)
-        }
-        task.resume()
-    }
-
     func doAPIHttpPost(url:String,
                        header: Dictionary<String, String>,
                        body: Dictionary<String, Any>,
                        completion: @escaping (Int, Data?, HTTPURLResponse?) -> ()) throws {
-        try self.doHttpPost(url: url, header: header, body: body) { (data, response, error) in
+        try doHttpPost(url: url, header: header, body: body) { (data, response, error) in
             if error != nil {
                 self.lastErrorCode = -1
                 self.lastErrorMsg = "Unknown error (got error from http request)"
@@ -304,7 +313,7 @@ public class TG3DMobileScan: NSObject {
     func doRegisterByEmail(email: String,
                            password: String,
                            completion: @escaping (Int, String?) -> ()) {
-        let url = String(format:"%@/api/v1/users/register_email?apikey=%@",arguments:[self.baseUrl, self.apiKey])
+        let url = String(format:"%@/api/v1/users/register_email?apikey=%@", arguments:[self.baseUrl, self.apiKey])
         do {
             let header = [ String: String ]()
             let body = [ "email": email, "password": password, "provider": 0 ] as [String : Any]
@@ -355,7 +364,7 @@ public class TG3DMobileScan: NSObject {
     func doSignin(accountId: String,
                   password: String,
                   completion: @escaping (Int, String?) -> ()) {
-        let url = String(format:"%@/api/v1/users/signin?apikey=%@",arguments:[self.baseUrl, self.apiKey])
+        let url = String(format:"%@/api/v1/users/signin?apikey=%@", arguments:[self.baseUrl, self.apiKey])
         do {
             let header = [ String: String ]()
             let body = [ "username": accountId, "password": password ]
@@ -371,21 +380,21 @@ public class TG3DMobileScan: NSObject {
                     return
                 }
                 do {
-                  guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
-                      // appropriate error handling
-                      self.lastErrorCode = -1
-                      self.lastErrorMsg = "invalid data format(response is not json)"
-                      completion(self.lastErrorCode, nil)
-                      return
-                  }
-                  guard let auth_token = json["auth_token"] as? String else {
-                      // appropriate error handling
-                      self.lastErrorCode = -1
-                      self.lastErrorMsg = "invalid data format(no auth_token in response)"
-                      completion(self.lastErrorCode, nil)
-                      return
-                  }
-                  completion(0, auth_token)
+                    guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                        // appropriate error handling
+                        self.lastErrorCode = -1
+                        self.lastErrorMsg = "invalid data format(response is not json)"
+                        completion(self.lastErrorCode, nil)
+                        return
+                    }
+                    guard let auth_token = json["auth_token"] as? String else {
+                        // appropriate error handling
+                        self.lastErrorCode = -1
+                        self.lastErrorMsg = "invalid data format(no auth_token in response)"
+                        completion(self.lastErrorCode, nil)
+                        return
+                    }
+                    completion(0, auth_token)
 
                 } catch {
                     self.lastErrorCode = -1
@@ -406,7 +415,7 @@ public class TG3DMobileScan: NSObject {
     func doAuth(accountId: String,
                 authToken: String,
                 completion: @escaping (Int, String?) -> ()) {
-        let url = String(format:"%@/api/v1/users/auth?apikey=%@",arguments:[self.baseUrl, self.apiKey])
+        let url = String(format:"%@/api/v1/users/auth?apikey=%@", arguments:[self.baseUrl, self.apiKey])
         do {
             let header = [ String: String ]()
             let body = [ "username": accountId, "auth_token": authToken, "provider": 0 ] as [String : Any]
@@ -454,7 +463,7 @@ public class TG3DMobileScan: NSObject {
     }
 
     func doGetUserProfile(completion: @escaping (Int, [String: Any]?) -> ()) {
-        let url = String(format:"%@/api/v1/users/profile?apikey=%@",arguments:[self.baseUrl, self.apiKey])
+        let url = String(format:"%@/api/v1/users/profile?apikey=%@", arguments:[self.baseUrl, self.apiKey])
         do {
             // let header = [ String: String ]()
             let header = [ "X-User-Access-Token": self.accessToken ]
@@ -495,9 +504,8 @@ public class TG3DMobileScan: NSObject {
     func doListScanRecords(offset: Int,
                            limit: Int,
                            completion: @escaping (Int, Int, Array<Any>) -> ()) {
-        let url = String(format:"%@/api/v1/scan_records?unfold=false&apikey=%@",arguments:[self.baseUrl, self.apiKey])
+        let url = String(format:"%@/api/v1/scan_records?unfold=false&apikey=%@", arguments:[self.baseUrl, self.apiKey])
         do {
-            // let header = [ String: String ]()
             let header = [ "X-User-Access-Token": self.accessToken ]
             try self.doAPIHttpGet(url: url, header: header) { (rc, data, response) in
                 if rc != 0 {
@@ -582,7 +590,7 @@ public class TG3DMobileScan: NSObject {
     }
 
     func doGetObj(tid: String, completion: @escaping (Int, String?) -> ()) {
-        let url = String(format:"%@/api/v1/scan_records/%@/obj?apikey=%@",arguments:[self.baseUrl, tid, self.apiKey])
+        let url = String(format:"%@/api/v1/scan_records/%@/obj?apikey=%@", arguments:[self.baseUrl, tid, self.apiKey])
         do {
             let header = [ "X-User-Access-Token": self.accessToken ]
             try doHttpHead(url: url, header: header) { (data, response, error) in
@@ -615,7 +623,7 @@ public class TG3DMobileScan: NSObject {
     }
 
     func doGetAutoMeasurements(tid: String, completion: @escaping (Int, [String: Any]?) -> ()) {
-        let url = String(format:"%@/api/v1/scan_records/%@/size_xt?version=4&apikey=%@",arguments:[self.baseUrl, tid, self.apiKey])
+        let url = String(format:"%@/api/v1/scan_records/%@/size_xt?version=4&apikey=%@", arguments:[self.baseUrl, tid, self.apiKey])
         do {
             let header = [ "X-User-Access-Token": self.accessToken ]
             try self.doAPIHttpGet(url: url, header: header) { (rc, data, response) in
@@ -652,7 +660,7 @@ public class TG3DMobileScan: NSObject {
     }
 
     public func doWaitingForScanningResult(scannerId: String, tid: String, completion: @escaping (Int) -> ()) {
-        let url = String(format:"%@/api/v1/scanners/%@/%@/wait_finish?version=4&apikey=%@",arguments:[self.baseUrl, scannerId, tid, self.apiKey])
+        let url = String(format:"%@/api/v1/scanners/%@/%@/wait_finish?version=4&apikey=%@", arguments:[self.baseUrl, scannerId, tid, self.apiKey])
         do {
             let header = [ "Content-Type": "application/json", "X-User-Access-Token": self.accessToken ]
             let body = [ String: String ]()
@@ -892,15 +900,7 @@ extension TG3DMobileScan: I3DRecorder.ScanServiceDelegate {
 
 @objc
 public protocol TG3DMobileScanDelegate: AnyObject {
-    @objc func recorderStateDidChange(_: TG3DIn3DRecorderState)
-}
-
-/// Obj-C wrapper for RecordState
-@objc
-public enum TG3DIn3DRecorderState: Int {
-    case finished
-    case ready
-    case scanning
+    @objc func recorderStateDidChange(_: TG3DMobileScanState)
 }
 
 // MARK: - RecorderDelegate
@@ -909,7 +909,7 @@ extension TG3DMobileScan: RecorderDelegate {
         delegate?.recorderStateDidChange(convertRecordState(state))
     }
 
-    private func convertRecordState(_ state: RecordState) -> TG3DIn3DRecorderState {
+    private func convertRecordState(_ state: RecordState) -> TG3DMobileScanState {
         switch state {
             case .ready: return .ready
             case .scanning: return .scanning
@@ -917,15 +917,6 @@ extension TG3DMobileScan: RecorderDelegate {
             @unknown default: fatalError()
         }
     }
-}
-
-@objc
-public enum TG3DIn3DInitError: Int {
-    case none                    = 0
-    case scanNotInited           = -1001
-    case cameraSetupError        = -1002
-    case cameraAccessDenied      = -1003
-    case cameraAccessRestricted  = -1004
 }
 
 public extension I3DRecordInitError {
