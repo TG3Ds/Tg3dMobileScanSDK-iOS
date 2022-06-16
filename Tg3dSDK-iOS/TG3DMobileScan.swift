@@ -310,6 +310,56 @@ public class TG3DMobileScan: NSObject {
     }
 
     @objc
+    func doCheckAccount(username: String,
+                        completion: @escaping (Int, Bool) -> ()) {
+        let url = String(format:"%@/api/v1/users/check_account?apikey=%@", arguments:[self.baseUrl, self.apiKey])
+        do {
+            let header = [ String: String ]()
+            let body = [ "username": username, "provider": 0 ] as [String : Any]
+            try self.doAPIHttpPost(url: url, header: header, body: body) { (rc, data, response) in
+                if rc != 0 {
+                    completion(rc, false)
+                    return
+                }
+                guard let data = data else {
+                    self.lastErrorCode = -1
+                    self.lastErrorMsg = "no data"
+                    completion(self.lastErrorCode, false)
+                    return
+                }
+                do {
+                  guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                      // appropriate error handling
+                      self.lastErrorCode = -1
+                      self.lastErrorMsg = "invalid data format(response is not json)"
+                      completion(self.lastErrorCode, false)
+                      return
+                  }
+                  guard let available = json["available"] as? Bool else {
+                      // appropriate error handling
+                      self.lastErrorCode = -1
+                      self.lastErrorMsg = "invalid data format(no available in response)"
+                      completion(self.lastErrorCode, false)
+                      return
+                  }
+                  completion(0, available)
+
+                } catch {
+                    self.lastErrorCode = -1
+                    self.lastErrorMsg = error.localizedDescription
+                    completion(self.lastErrorCode, false)
+                }
+            }
+
+        } catch {
+            self.lastErrorCode = -1
+            self.lastErrorMsg = error.localizedDescription
+            completion(self.lastErrorCode, false)
+            return
+        }
+    }
+
+    @objc
     func doRegisterByEmail(email: String,
                            password: String,
                            completion: @escaping (Int, String?) -> ()) {
@@ -465,7 +515,6 @@ public class TG3DMobileScan: NSObject {
     func doGetUserProfile(completion: @escaping (Int, [String: Any]?) -> ()) {
         let url = String(format:"%@/api/v1/users/profile?apikey=%@", arguments:[self.baseUrl, self.apiKey])
         do {
-            // let header = [ String: String ]()
             let header = [ "X-User-Access-Token": self.accessToken ]
             try self.doAPIHttpGet(url: url, header: header) { (rc, data, response) in
                 if rc != 0 {
@@ -496,6 +545,43 @@ public class TG3DMobileScan: NSObject {
             self.lastErrorCode = -1
             self.lastErrorMsg = error.localizedDescription
             completion(self.lastErrorCode, nil)
+            return
+        }
+    }
+
+    @objc
+    func doPostUserProfile(profile: UserProfile, completion: @escaping (Int) -> ()) {
+        let url = String(format:"%@/api/v1/users/profile?apikey=%@", arguments:[self.baseUrl, self.apiKey])
+        do {
+            let header = [ "X-User-Access-Token": self.accessToken ]
+            var body = [
+                "nick_name": profile.name!,
+                "gender": profile.gender,
+                "height": profile.height,
+            ] as [String : Any]
+            if profile.weight > 0 {
+                body["weight"] = profile.weight
+            }
+            if profile.telephone != nil {
+                body["telephone"] = profile.telephone
+            }
+            if profile.mobilePhone  != nil {
+                body["mobile_phone"] = profile.mobilePhone
+            }
+            if profile.email != nil {
+                body["email"] = profile.email
+            }
+            if profile.address != nil {
+                body["address"] = profile.address
+            }
+            try self.doAPIHttpPost(url: url, header: header, body: body) { (rc, data, response) in
+                completion(rc)
+            }
+
+        } catch {
+            self.lastErrorCode = -1
+            self.lastErrorMsg = error.localizedDescription
+            completion(self.lastErrorCode)
             return
         }
     }
@@ -681,16 +767,28 @@ public class TG3DMobileScan: NSObject {
     }
 
     @objc
+    func checkAccount(username: String,
+                      completion: @escaping (Int, Bool) -> ()) {
+        self.doCheckAccount(username: username) { (rc, available) in
+            if rc != 0 {
+                completion(rc, false)
+                return
+            }
+            completion(rc, available)
+        }
+    }
+
+    @objc
     func registerByEmail(email: String,
                          password: String,
                          completion: @escaping (Int, String?) -> ()) {
-      self.doRegisterByEmail(email: email, password: password) { (rc, username) in
-          if rc != 0 {
-              completion(rc, nil)
-              return
-          }
-          completion(rc, username)
-      }
+        self.doRegisterByEmail(email: email, password: password) { (rc, username) in
+            if rc != 0 {
+                completion(rc, nil)
+                return
+            }
+            completion(rc, username)
+        }
     }
 
     @objc
@@ -736,6 +834,13 @@ public class TG3DMobileScan: NSObject {
             userProfile.avatarThumbUrl = result!["avatar_thumb_url"] as? String
 
             completion(rc, userProfile)
+        }
+    }
+
+    @objc
+    public func updateUserProfile(profile: UserProfile, completion: @escaping (Int) -> ()) {
+        self.doPostUserProfile(profile: profile) { (rc) in
+            completion(rc)
         }
     }
 
