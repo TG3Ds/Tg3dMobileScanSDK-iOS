@@ -48,6 +48,22 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        let borderColor = UIColor(red: 0.7, green: 0.7, blue: 0.7, alpha: 0.7).cgColor
+        self.accountInput?.layer.borderWidth = 1
+        self.accountInput?.layer.cornerRadius = 3.0
+        self.accountInput?.layer.borderColor = borderColor
+        self.passwordInput?.layer.borderWidth = 1
+        self.passwordInput?.layer.cornerRadius = 3.0
+        self.passwordInput?.layer.borderColor = borderColor
+        self.reviewPasswordInput?.layer.borderWidth = 1
+        self.reviewPasswordInput?.layer.cornerRadius = 3.0
+        self.reviewPasswordInput?.layer.borderColor = borderColor
+        self.usernameInput?.layer.borderWidth = 1
+        self.usernameInput?.layer.cornerRadius = 3.0
+        self.usernameInput?.layer.borderColor = borderColor
+        self.heightInput?.layer.borderWidth = 1
+        self.heightInput?.layer.cornerRadius = 3.0
+        self.heightInput?.layer.borderColor = borderColor
         if self.sdk == nil {
             self.sdk = TG3DMobileScan(apiKey: self.apiKey)
             self.sdk!.currentRegion() { (rc, baseUrl) in
