@@ -24,6 +24,12 @@ class ViewController: UIViewController {
     @IBOutlet weak var previewVideoView: MTKView!
     @IBOutlet weak var uploadButton: UIButton!
 
+    @IBOutlet weak var reviewAccountInput: UITextField!
+    @IBOutlet weak var reviewPasswordInput: UITextField!
+    @IBOutlet weak var usernameInput: UITextField!
+    @IBOutlet weak var heightInput: UITextField!
+    @IBOutlet weak var registerButton: UIButton!
+
     let apiKey: String = "" // your apikey
     let scannerId: String = "" // your scanner ID
     let sessionKey: String = "" // your session key
@@ -36,6 +42,8 @@ class ViewController: UIViewController {
     var tid: String = ""
     var previewVidelUrl: URL?
     var player: AVPlayer?
+    var registerEmail: String = ""
+    var registerPassword: String = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -192,6 +200,10 @@ class ViewController: UIViewController {
                 self.player?.play()
             })
         }
+        if self.currentSegue == "showRegisterPage" {
+            self.reviewAccountInput.text = self.registerEmail
+            self.reviewPasswordInput.text = self.registerPassword
+        }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -201,6 +213,8 @@ class ViewController: UIViewController {
             destinationViewController.userProfile = self.userProfile
             destinationViewController.lastScanRecord = self.lastScanRecord
             destinationViewController.previewVidelUrl = self.previewVidelUrl
+            destinationViewController.registerEmail = self.registerEmail
+            destinationViewController.registerPassword = self.registerPassword
             destinationViewController.currentSegue = segue.identifier!
         }
     }
@@ -358,5 +372,136 @@ class ViewController: UIViewController {
 
     @IBAction func backToMainPageOnClicked(_ sender: Any) {
         self.performSegue(withIdentifier: "finishedAndBackMainPage", sender: self)
+    }
+
+    @IBAction func goRegisterOnClick(_ sender: Any) {
+        let username: String = accountInput.text ?? ""
+        let password: String = passwordInput.text ?? ""
+        if username.count == 0 {
+            let alertController = UIAlertController(title: "Username can not be null",
+                                                    message: "Please input email to register account.",
+                                                    preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+            return
+        }
+        // /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+        let emailCheckingRegex = try! NSRegularExpression(pattern: "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$")
+        if emailCheckingRegex.firstMatch(in: username, options: [], range: NSRange(location: 0, length: username.count)) == nil {
+            let alertController = UIAlertController(title: "Username is not an email",
+                                                    message: "Please check the format.",
+                                                    preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+            return
+        }
+        if password.count < 6 {
+            let alertController = UIAlertController(title: "Password is too short",
+                                                    message: "Please input password at least 6 characters.",
+                                                    preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+            return
+        }
+
+        self.sdk!.checkAccount(username: username) { (rc, available) in
+            DispatchQueue.main.async {
+                if rc < 0 {
+                    let alertController = UIAlertController(title: String(format: "Error code: %d", rc),
+                                                            message: "Failed to check account",
+                                                            preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                    alertController.addAction(okAction)
+                    self.present(alertController, animated: true, completion: nil)
+                    return
+                }
+
+                if !available {
+                    let alertController = UIAlertController(title: "Account had been used",
+                                                           message: "Please try another account.",
+                                                           preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                    alertController.addAction(okAction)
+                    self.present(alertController, animated: true, completion: nil)
+                    return
+                }
+
+                self.registerEmail = username
+                self.registerPassword = password
+                self.performSegue(withIdentifier: "showRegisterPage", sender: self)
+            }
+        }
+    }
+
+    @IBAction func registerOnClick(_ sender: Any) {
+        let email: String = self.registerEmail
+        let password: String = self.reviewPasswordInput.text ?? ""
+        let name: String = self.usernameInput.text ?? ""
+        let height: Int = Int(self.heightInput.text ?? "0") ?? 0
+        if password.count < 6 {
+            let alertController = UIAlertController(title: "Password is too short",
+                                                    message: "Please input password at least 6 characters.",
+                                                    preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+            return
+        }
+        if height < 120 || height > 250 {
+            let alertController = UIAlertController(title: "Invalid user height",
+                                                    message: "Please input user height in cm between 120 ~ 250.",
+                                                    preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+            return
+        }
+
+        self.registerButton.isEnabled = false
+
+        // register => signin => update user profile
+        self.sdk!.registerByEmail(email: email, password: password) { (rc, username) in
+            if rc < 0 {
+                let alertController = UIAlertController(title: String(format: "Error code: %d", rc),
+                                                        message: "Failed to register account",
+                                                        preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true, completion: nil)
+                self.registerButton.isEnabled = true
+                return
+            }
+            self.sdk!.signin(accountId: email,
+                             password: password) { (rc) in
+                print(String(format: "signin(), rc = %d", rc))
+                if rc == 0 {
+                    self.userProfile = UserProfile()
+                    self.userProfile!.name = name
+                    self.userProfile!.height = height
+                    self.sdk!.updateUserProfile(profile: self.userProfile!) { (rc) in
+                        print(String(format: "updateUserProfile(), rc = %d", rc))
+                        DispatchQueue.main.async {
+                            self.registerButton.isEnabled = true
+                            self.performSegue(withIdentifier: "showMainPage", sender: self)
+                        }
+                    }
+
+                } else {
+                    DispatchQueue.main.async {
+                        let alertController = UIAlertController(title: "Failed to login",
+                                                                message: String(format: "Error code: %d", rc),
+                                                                preferredStyle: .alert)
+                        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                        alertController.addAction(okAction)
+                        self.present(alertController, animated: true, completion: nil)
+                        self.performSegue(withIdentifier: "backToLoginPage", sender: self)
+                        self.registerButton.isEnabled = true
+                    }
+                }
+            }
+        }
     }
 }
