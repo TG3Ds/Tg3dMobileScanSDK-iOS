@@ -11,8 +11,9 @@ For more details, you may check TG3D Scan APIs (https://mtm.tg3ds.com).
 1. [Init SDK](#init-sdk)
 2. [Scan flows](#scan-flows)
 3. [3D models](#3d-models)
-4. [APIs](#apis)
-5. [Sample Code](#sample-code)
+4. [Body Measurements](#body-measurements)
+5. [APIs](#apis)
+6. [Sample Code](#sample-code)
 
 ## Init SDK
 
@@ -41,7 +42,12 @@ NOTE 2: We limit 3 mobile scans per user per month.
 
 ## 3D models
 
-Use [listScanRecords()](#listscanrecords) and [getObj()](#getobj) to retrieve obj URL. Then display it with SceneKit.
+Use [listScanRecords()](#listscanrecords) and [getObj()](#getobj) to retrieve OBJ 3D model URL. Then display it with SceneKit.
+
+## Body measurements
+
+After scanning and 3D model been generated, we also analyze body measurements from the scanned model.
+Use [getAutoMeasurements()](#getautomeasurements) to retrieve body measurements.
 
 ## APIs
 
