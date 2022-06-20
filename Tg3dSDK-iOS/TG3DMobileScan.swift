@@ -161,9 +161,9 @@ public class TG3DMobileScan: NSObject {
     @objc public var lastErrorCode: Int
     @objc public var lastErrorMsg: String
     @objc public weak var delegate: TG3DMobileScanDelegate?
-    @objc public var tid: String?
-    @objc public var in3dId: String?
 
+    var tid: String?
+    var in3dId: String?
     var scanService: ScanService = I3DScanService.shared
     var recorder: Recorder?
     var recording: ScanRecording?
@@ -309,7 +309,6 @@ public class TG3DMobileScan: NSObject {
         }
     }
 
-    @objc
     func doCheckAccount(username: String,
                         completion: @escaping (Int, Bool) -> ()) {
         let url = String(format:"%@/api/v1/users/check_account?apikey=%@", arguments:[self.baseUrl, self.apiKey])
@@ -359,7 +358,6 @@ public class TG3DMobileScan: NSObject {
         }
     }
 
-    @objc
     func doRegisterByEmail(email: String,
                            password: String,
                            completion: @escaping (Int, String?) -> ()) {
@@ -410,7 +408,6 @@ public class TG3DMobileScan: NSObject {
         }
     }
 
-    @objc
     func doSignin(accountId: String,
                   password: String,
                   completion: @escaping (Int, String?) -> ()) {
@@ -461,7 +458,6 @@ public class TG3DMobileScan: NSObject {
         }
     }
 
-    @objc
     func doAuth(accountId: String,
                 authToken: String,
                 completion: @escaping (Int, String?) -> ()) {
@@ -549,7 +545,6 @@ public class TG3DMobileScan: NSObject {
         }
     }
 
-    @objc
     func doPostUserProfile(profile: UserProfile, completion: @escaping (Int) -> ()) {
         let url = String(format:"%@/api/v1/users/profile?apikey=%@", arguments:[self.baseUrl, self.apiKey])
         do {
@@ -586,7 +581,6 @@ public class TG3DMobileScan: NSObject {
         }
     }
 
-    @objc
     func doListScanRecords(offset: Int,
                            limit: Int,
                            completion: @escaping (Int, Int, Array<Any>) -> ()) {
@@ -634,7 +628,6 @@ public class TG3DMobileScan: NSObject {
         }
     }
 
-    @objc
     func doInitScanner(scannerId: String,
                        sessionKey: String,
                        completion: @escaping (Int, [String: Any]?) -> ()) {
@@ -745,7 +738,7 @@ public class TG3DMobileScan: NSObject {
         }
     }
 
-    public func doWaitingForScanningResult(scannerId: String, tid: String, completion: @escaping (Int) -> ()) {
+    func doWaitingForScanningResult(scannerId: String, tid: String, completion: @escaping (Int) -> ()) {
         let url = String(format:"%@/api/v1/scanners/%@/%@/wait_finish?version=4&apikey=%@", arguments:[self.baseUrl, scannerId, tid, self.apiKey])
         do {
             let header = [ "Content-Type": "application/json", "X-User-Access-Token": self.accessToken ]
@@ -767,8 +760,8 @@ public class TG3DMobileScan: NSObject {
     }
 
     @objc
-    func checkAccount(username: String,
-                      completion: @escaping (Int, Bool) -> ()) {
+    public func checkAccount(username: String,
+                             completion: @escaping (Int, Bool) -> ()) {
         self.doCheckAccount(username: username) { (rc, available) in
             if rc != 0 {
                 completion(rc, false)
@@ -779,9 +772,9 @@ public class TG3DMobileScan: NSObject {
     }
 
     @objc
-    func registerByEmail(email: String,
-                         password: String,
-                         completion: @escaping (Int, String?) -> ()) {
+    public func registerByEmail(email: String,
+                                password: String,
+                                completion: @escaping (Int, String?) -> ()) {
         self.doRegisterByEmail(email: email, password: password) { (rc, username) in
             if rc != 0 {
                 completion(rc, nil)
