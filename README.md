@@ -29,16 +29,19 @@ sdk.currentRegion(useDev: false) { (rc, baseUrl) in
 
 ## Scan flows
 
-0. User sign-in
-1. initMobileScan()
-2. prepareForRecord()
-3. startRecordingBody()
-4. stopRecording()
-5. uploadScans()
+0. [User sign-in](#signin)
+1. [initMobileScan()](#initmobilescan)
+2. [prepareForRecord()](#prepareforrecord)
+3. [startRecordingBody()](#startrecordingbody)
+4. [stopRecording()](#stoprecording)
+5. [uploadScans()](#uploadscans)
+
+NOTE 1: You will need scanner id and session key while doing mobile scan.
+NOTE 2: We limit 3 mobile scans per user per month.
 
 ## 3D models
 
-Use listScanRecords() and getObj() to retrieve obj URL. Then display it with SceneKit.
+Use [listScanRecords()](#listscanrecords) and [getObj()](#getobj) to retrieve obj URL. Then display it with SceneKit.
 
 ## APIs
 
