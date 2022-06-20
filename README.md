@@ -38,7 +38,8 @@ sdk.currentRegion() { (rc, baseUrl) in
 5. [uploadScans()](#uploadscans)
 
 NOTE 1: You will need scanner id and session key while doing mobile scan.
-NOTE 2: We limit 3 mobile scans per user per month.
+
+NOTE 2: We limit 3 mobile scans per user per month. it is recommended to prepare multiple users while developing. Count of scan records will be reset on 1st of every month.
 
 ## 3D models
 
