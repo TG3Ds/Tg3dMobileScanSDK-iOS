@@ -89,6 +89,9 @@ public class ScanRecord: NSObject {
 ```
 
 #### checkAccount()
+
+Check availability of the account
+
 ```swift
 @objc
 public func checkAccount(username: String,
@@ -96,12 +99,16 @@ public func checkAccount(username: String,
 ```
 ##### Parameters
 
-- username: Email of the user.
+- username: The account to check availability.
 - completion(rv, available): Callback function on operation completed.
   - rv: Return value. Got 0 means the operation works fine. Got non-zero value is error code. 
-  - available: 'True' means this email is available. 'False' means the email is registered.
+  - available: 'true' if the account is available.
+
 
 #### registerByEmail()
+
+Register a new account by email address.
+
 ```swift
 @objc
 public func registerByEmail(email: String,
@@ -109,33 +116,80 @@ public func registerByEmail(email: String,
                             completion: @escaping (Int, String?) -> ())
 ```
 
-#### function - signin()
+##### Parameters
+- email: The email address.
+- password: The password for this account.
+- completion(rv, username): Callback function on operation completed.
+  - rv: Return value. Got 0 means the operation works fine. Got non-zero value is error code. 
+  - username: The username of the created account.
+
+
+#### signin()
+
+Signin the account.
+
 ```swift
 @objc
-public func signin(accountId: String,
+public func signin(username: String,
                    password: String,
                    completion: @escaping (Int) -> ())
 ```
 
+##### Parameters
+- username: The username which is returned by register APIs.
+- password: The password for this account.
+- completion(rv, username): Callback function on operation completed.
+  - rv: Return value. Got 0 means the operation works fine. Got non-zero value is error code. 
+
+
 #### getUserProfile()
+
+Get the user’s profile.
+
 ```swift
 @objc
 public func getUserProfile(completion: @escaping (Int, UserProfile?) -> ())
 ```
 
+##### Parameters
+- completion(rv, userProfile): Callback function on operation completed.
+  - rv: Return value. Got 0 means the operation works fine. Got non-zero value is error code. 
+  - userProfile: User profile in UserProfile.
+
+
 #### updateUserProfile()
+
+Set the user’s profile
+
 ```swift
 @objc
 public func updateUserProfile(profile: UserProfile, completion: @escaping (Int) -> ())
 ```
 
+##### Parameters
+- userProfile: User profile in UserProfile.
+- completion(rv): Callback function on operation completed.
+  - rv: Return value. Got 0 means the operation works fine. Got non-zero value is error code. 
+
+
 #### listScanRecords()
+
+Get the scan records, will return the scan records for this user.
+
 ```swift
 @objc
 public func listScanRecords(offset: Int,
                             limit: Int,
                             completion: @escaping (Int, Int, [ScanRecord]) -> ())
 ```
+##### Parameters
+- limit: The number of records to return, default value is 20, and maximum value is 100.
+- offset: The offset of records to return, default value is 0, use for doing pagination.
+- completion(rv, total, scanRecords): Callback function on operation completed.
+  - rv: Return value. Got 0 means the operation works fine. Got non-zero value is error code. 
+  - total: Number of scan records.
+  - scanRecords: Scan records in ScanRecord.
+
 
 #### initMobileScan()
 ```swift
