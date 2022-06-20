@@ -182,6 +182,7 @@ public func listScanRecords(offset: Int,
                             limit: Int,
                             completion: @escaping (Int, Int, [ScanRecord]) -> ())
 ```
+
 ##### Parameters
 - limit: The number of records to return, default value is 20, and maximum value is 100.
 - offset: The offset of records to return, default value is 0, use for doing pagination.
@@ -192,6 +193,9 @@ public func listScanRecords(offset: Int,
 
 
 #### initMobileScan()
+
+Initiate a mobile scan.
+
 ```swift
 @objc
 public func initMobileScan(scannerId: String,
@@ -200,53 +204,114 @@ public func initMobileScan(scannerId: String,
                            completion: @escaping (Int, String?) -> ())
 ```
 
+##### Parameters
+- scannerId: Scanner id of your mobile scan.
+- sessionKey: Session key of your mobile scan.
+- userHeight: User height in CM.
+- completion(rv, tid): Callback function on operation completed.
+  - rv: Return value. Got 0 means the operation works fine. Got non-zero value is error code. 
+  - tid: Transaction id for this scan.
+
+
 #### prepareForRecord()
+
+Prepare view for starting mobile scan.
+
 ```swift
 @objc
 public func prepareForRecord(preview: MTKView,
                              completion: @escaping ((Int) -> Void))
 ```
 
+##### Parameters
+- preview: MTKView to preview mobile scan camera.
+- completion(rv): Callback function on operation completed.
+  - rv: Return value. Got 0 means the operation works fine. Got non-zero value is error code. 
+
+
 #### startRecordingBody()
+
+Start recording.
+
 ```swift
 @objc
 public func startRecordingBody()
 ```
 
 #### cancelRecording()
+
+Cancel recording.
+
 ```swift
 @objc
 public func cancelRecording()
 ```
 
 #### stopRecording()
+
+Stop recording.
+
 ```swift
 @objc
 public func stopRecording(completion: @escaping ((Int, URL?) -> Void))
 ```
 
+##### Parameters
+- completion(rv, url): Callback function on operation completed.
+  - rv: Return value. Got 0 means the operation works fine. Got non-zero value is error code. 
+  - url: Url of recorded video for preview.
+
 #### uploadScans()
+
+Upload mobile scan, and it will process on the cloud, generate 3D model and analyze body measurements.
+
 ```swift
 @objc
 public func uploadScans(
     progress: @escaping (Double, Int64) -> (),
-    completion: @escaping (Int, String?) -> ()
+    completion: @escaping (Int, _) -> ()
 )
 ```
 
+##### Parameters
+- progress(percentage, total): Callback function for uploading progress.
+  - percentage: Uploading percentage.
+  - total: Total bytes.
+- completion(rv): Callback function on operation completed.
+  - rv: Return value. Got 0 means the operation works fine. Got non-zero value is error code. 
+
+
 #### getObj()
+
+Get OBJ model URL for the scan record.
+
 ```swift
 @objc
 public func getObj(tid: String,
                    completion: @escaping (Int, String?) -> ())
 ```
 
+##### Parameters
+- tid: Transaction id for the scan record.
+- completion(rv, url): Callback function on operation completed.
+  - rv: Return value. Got 0 means the operation works fine. Got non-zero value is error code. 
+  - url: Zipped OBJ model URL of the scan record.
+
 #### getAutoMeasurements()
+
+Get the auto measurements for the scan record.
+
 ```swift
 @objc
 public func getAutoMeasurements(tid: String,
                                 completion: @escaping (Int, [String: Any]?) -> ())
 ```
+
+##### Parameters
+- tid: Transaction id for the scan record.
+- completion(rv, measurements): Callback function on operation completed.
+  - rv: Return value. Got 0 means the operation works fine. Got non-zero value is error code. 
+  - measurements: Body measurements of the scan record in dict format.
 
 
 ## Sample Code
