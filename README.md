@@ -20,7 +20,7 @@ First, you must have an API-KEY. Then, retrieve and setup region to SDK.
 
 ```swift
 let sdk = TG3DMobileScan(apiKey: "<YOUR API-KEY>")
-sdk.currentRegion(useDev: false) { (rc, baseUrl) in
+sdk.currentRegion() { (rc, baseUrl) in
     if rc == 0 {
         sdk.setup(baseUrl: baseUrl)
     }
