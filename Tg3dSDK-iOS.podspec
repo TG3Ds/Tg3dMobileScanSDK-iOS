@@ -1,8 +1,8 @@
 Pod::Spec.new do |s|
   s.name             = 'Tg3dSDK-iOS'
-  s.version          = '0.1.0'
-  s.summary          = 'SDK for developing mobile-scan with Tg3d APIs.'
-  s.description      = 'SDK for developing mobile-scan with Tg3d APIs.'
+  s.version          = '1.0.0'
+  s.summary          = 'SDK for developing mobile-scan app with TG3DS ScanAPIs.'
+  s.description      = 'SDK for developing mobile-scan app with TG3DS ScanAPIs.'
   s.homepage         = 'https://github.com/TG3Ds/Tg3dSDK-iOS'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'tg3ddeveloper' => 'tg3ddeveloper@tg3ds.com' }
