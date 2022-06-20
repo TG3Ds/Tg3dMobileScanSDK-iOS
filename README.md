@@ -97,11 +97,9 @@ public func checkAccount(username: String,
 ##### Parameters
 
 - username: Email of the user.
-
-##### Completion(rv, available)
-
-- rv: Return value. Got 0 means the operation works fine. Got non-zero value is error code. 
-- available: 'True' means this email is available. 'False' means the email is registered.
+- completion(rv, available): Callback function on operation completed.
+  - rv: Return value. Got 0 means the operation works fine. Got non-zero value is error code. 
+  - available: 'True' means this email is available. 'False' means the email is registered.
 
 #### registerByEmail()
 ```swift
