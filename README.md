@@ -88,6 +88,114 @@ public class ScanRecord: NSObject {
 }
 ```
 
+#### checkAccount()
+```swift
+@objc
+public func checkAccount(username: String,
+                         completion: @escaping (Int, Bool) -> ())
+```
+##### Parameters
+
+- username: Email of the user.
+
+##### Completion(rv, available)
+
+- rv: Return value. Got 0 means the operation works fine. Got non-zero value is error code. 
+- available: 'True' means this email is available. 'False' means the email is registered.
+
+#### registerByEmail()
+```swift
+@objc
+public func registerByEmail(email: String,
+                            password: String,
+                            completion: @escaping (Int, String?) -> ())
+```
+
+#### function - signin()
+```swift
+@objc
+public func signin(accountId: String,
+                   password: String,
+                   completion: @escaping (Int) -> ())
+```
+
+#### getUserProfile()
+```swift
+@objc
+public func getUserProfile(completion: @escaping (Int, UserProfile?) -> ())
+```
+
+#### updateUserProfile()
+```swift
+@objc
+public func updateUserProfile(profile: UserProfile, completion: @escaping (Int) -> ())
+```
+
+#### listScanRecords()
+```swift
+@objc
+public func listScanRecords(offset: Int,
+                            limit: Int,
+                            completion: @escaping (Int, Int, [ScanRecord]) -> ())
+```
+
+#### initMobileScan()
+```swift
+@objc
+public func initMobileScan(scannerId: String,
+                           sessionKey: String,
+                           userHeight: Int,
+                           completion: @escaping (Int, String?) -> ())
+```
+
+#### prepareForRecord()
+```swift
+@objc
+public func prepareForRecord(preview: MTKView,
+                             completion: @escaping ((Int) -> Void))
+```
+
+#### startRecordingBody()
+```swift
+@objc
+public func startRecordingBody()
+```
+
+#### cancelRecording()
+```swift
+@objc
+public func cancelRecording()
+```
+
+#### stopRecording()
+```swift
+@objc
+public func stopRecording(completion: @escaping ((Int, URL?) -> Void))
+```
+
+#### uploadScans()
+```swift
+@objc
+public func uploadScans(
+    progress: @escaping (Double, Int64) -> (),
+    completion: @escaping (Int, String?) -> ()
+)
+```
+
+#### getObj()
+```swift
+@objc
+public func getObj(tid: String,
+                   completion: @escaping (Int, String?) -> ())
+```
+
+#### getAutoMeasurements()
+```swift
+@objc
+public func getAutoMeasurements(tid: String,
+                                completion: @escaping (Int, [String: Any]?) -> ())
+```
+
 
 ## Sample Code
 
