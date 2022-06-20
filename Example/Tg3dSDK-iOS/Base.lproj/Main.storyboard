@@ -11,17 +11,17 @@
         <!--View Controller-->
         <scene sceneID="zaU-zx-43D">
             <objects>
-                <viewController id="Hrs-qk-ah2" customClass="ViewController" customModule="Tg3dSDK_iOS_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="Hrs-qk-ah2" customClass="ViewController" customModule="Tg3dSDK_iOS_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="aQu-e0-SHQ"/>
                         <viewControllerLayoutGuide type="bottom" id="jlY-R8-Eow"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="mmf-IN-PDH">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jBM-0K-crN">
-                                <rect key="frame" x="107" y="596" width="160" height="31"/>
+                                <rect key="frame" x="107" y="616" width="160" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Scan Body"/>
@@ -74,13 +74,13 @@
         <!--View Controller-->
         <scene sceneID="NX4-o8-UmO">
             <objects>
-                <viewController id="qe1-ot-34C" customClass="ViewController" customModule="Tg3dSDK_iOS_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="qe1-ot-34C" customClass="ViewController" customModule="Tg3dSDK_iOS_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Zkv-bO-5VQ"/>
                         <viewControllerLayoutGuide type="bottom" id="CUS-Ix-lpy"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="bpZ-og-z4x">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bp7-ia-rzH">
@@ -201,13 +201,13 @@
         <!--View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="Tg3dSDK_iOS_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="vXZ-lx-hvc" customClass="ViewController" customModule="Tg3dSDK_iOS_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Wav-Gi-Qhp">
@@ -287,13 +287,13 @@
         <!--View Controller-->
         <scene sceneID="oUF-eD-oUv">
             <objects>
-                <viewController id="ylH-bJ-fv2" customClass="ViewController" customModule="Tg3dSDK_iOS_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="ylH-bJ-fv2" customClass="ViewController" customModule="Tg3dSDK_iOS_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="8uR-hp-uaZ"/>
                         <viewControllerLayoutGuide type="bottom" id="Wgd-my-BOO"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="P5n-Gm-WBe">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mtkView contentMode="scaleToFill" fixedFrame="YES" colorPixelFormat="BGRA8Unorm" depthStencilPixelFormat="Depth32Float" translatesAutoresizingMaskIntoConstraints="NO" id="A5R-aW-hVk">
@@ -301,7 +301,7 @@
                                 <autoresizingMask key="autoresizingMask"/>
                             </mtkView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vbt-Zd-ZfS">
-                                <rect key="frame" x="104" y="595" width="160" height="31"/>
+                                <rect key="frame" x="104" y="615" width="160" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Start"/>
@@ -327,13 +327,13 @@
         <!--View Controller-->
         <scene sceneID="nSg-K0-WUQ">
             <objects>
-                <viewController id="heF-B2-5bW" customClass="ViewController" customModule="Tg3dSDK_iOS_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="heF-B2-5bW" customClass="ViewController" customModule="Tg3dSDK_iOS_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="gO8-N0-5Oc"/>
                         <viewControllerLayoutGuide type="bottom" id="6BH-SU-jT9"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="giN-LS-WCR">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mtkView contentMode="scaleToFill" fixedFrame="YES" colorPixelFormat="BGRA8Unorm" depthStencilPixelFormat="Depth32Float" translatesAutoresizingMaskIntoConstraints="NO" id="lkY-Wy-8Ih">
@@ -341,7 +341,7 @@
                                 <autoresizingMask key="autoresizingMask"/>
                             </mtkView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="97T-ph-Jdz">
-                                <rect key="frame" x="107" y="596" width="160" height="31"/>
+                                <rect key="frame" x="107" y="616" width="160" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Upload"/>
@@ -366,13 +366,13 @@
         <!--View Controller-->
         <scene sceneID="5oG-Mz-XbU">
             <objects>
-                <viewController id="bfp-jb-0Uw" customClass="ViewController" customModule="Tg3dSDK_iOS_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="bfp-jb-0Uw" customClass="ViewController" customModule="Tg3dSDK_iOS_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="G44-dn-s94"/>
                         <viewControllerLayoutGuide type="bottom" id="V9Q-9h-Bqm"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="icg-4l-ZeJ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RYZ-9r-BVi">
