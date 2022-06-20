@@ -10,7 +10,7 @@ For more details, you may check TG3D Scan APIs (https://mtm.tg3ds.com).
 
 1. [Init SDK](#init-sdk)
 2. [Scan flows](#scan-flows)
-3. [3D models](#3d-models)
+3. [Scan Records and 3D models](#scan-records-and-3d-models)
 4. [Body Measurements](#body-measurements)
 5. [APIs](#apis)
 6. [Sample Code](#sample-code)
@@ -41,7 +41,7 @@ NOTE 1: You will need scanner id and session key while doing mobile scan.
 
 NOTE 2: We limit 3 mobile scans per user per month. it is recommended to prepare multiple users while developing. Count of scan records will be reset on 1st of every month.
 
-## 3D models
+## Scan Records and 3D models
 
 Use [listScanRecords()](#listscanrecords) to retrieve scan records of the user, and use [getObj()](#getobj) to retrieve OBJ 3D model URL of the scan record. Then display it with SceneKit or any other OBJ viewer.
 
