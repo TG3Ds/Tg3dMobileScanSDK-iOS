@@ -42,7 +42,7 @@ NOTE 2: We limit 3 mobile scans per user per month.
 
 ## 3D models
 
-Use [listScanRecords()](#listscanrecords) to retrieve scan records of the user, and use [getObj()](#getobj) to retrieve OBJ 3D model URL of the scan record. Then display it with SceneKit.
+Use [listScanRecords()](#listscanrecords) to retrieve scan records of the user, and use [getObj()](#getobj) to retrieve OBJ 3D model URL of the scan record. Then display it with SceneKit or any other OBJ viewer.
 
 <img src="https://github.com/TG3Ds/Tg3dSDK-iOS/raw/master/screenshots/obj_model.png" width="300">
 
