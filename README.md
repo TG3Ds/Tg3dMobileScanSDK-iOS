@@ -72,25 +72,7 @@ public class UserProfile: NSObject {
 }
 ```
 
-#### Data structure - Store
-
-```swift
-public class Store: NSObject {
-    var name: String? = nil
-}
-```
-
-#### Data structure - Scanner
-
-```swift
-public class Scanner: NSObject {
-    var name: String? = nil
-    var expired: Bool = false
-    var store: Store? = nil
-}
-```
-
-#### Data structure - Scanner
+#### Data structure - ScanRecord
 
 ```swift
 public class ScanRecord: NSObject {
