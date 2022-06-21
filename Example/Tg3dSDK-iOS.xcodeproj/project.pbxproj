@@ -362,13 +362,13 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Tg3dSDK-iOS_Example/Pods-Tg3dSDK-iOS_Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Tg3dSDK-iOS/Tg3dSDK_iOS.framework",
+				"${BUILT_PRODUCTS_DIR}/Tg3dMobileScanSDK-iOS/Tg3dMobileScanSDK_iOS.framework",
 				"${BUILT_PRODUCTS_DIR}/ZIPFoundation/ZIPFoundation.framework",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/I3DRecorder/I3DRecorder.framework/I3DRecorder",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Tg3dSDK_iOS.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Tg3dMobileScanSDK_iOS.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ZIPFoundation.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/I3DRecorder.framework",
 			);

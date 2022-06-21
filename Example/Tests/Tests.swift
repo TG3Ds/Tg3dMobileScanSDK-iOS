@@ -2,7 +2,7 @@
 
 import Quick
 import Nimble
-@testable import Tg3dSDK_iOS
+@testable import Tg3dMobileScanSDK_iOS
 
 class Tg3dSDKSpec: QuickSpec {
     var sdk: TG3DMobileScan?

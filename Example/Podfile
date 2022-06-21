@@ -3,7 +3,7 @@ use_frameworks!
 platform :ios, '12.0'
 
 target 'Tg3dSDK-iOS_Example' do
-  pod 'Tg3dSDK-iOS', :path => '../'
+  pod 'Tg3dMobileScanSDK-iOS', :path => '../'
   pod 'I3DRecorder', :git => 'https://github.com/in3D-io/in3D-iOS-SDK.git'
   pod 'ZIPFoundation', '~> 0.9'
   target 'Tg3dSDK-iOS_Tests' do

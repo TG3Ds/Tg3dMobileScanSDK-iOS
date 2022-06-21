@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Tg3dMobileScanSDK-iOS'
-  s.version          = '1.0.1'
+  s.version          = '1.0.2'
   s.summary          = 'SDK for developing mobile-scan app with TG3DS ScanAPIs.'
   s.description      = 'SDK for developing mobile-scan app with TG3DS ScanAPIs.'
   s.homepage         = 'https://github.com/TG3Ds/Tg3dMobileScanSDK-iOS'

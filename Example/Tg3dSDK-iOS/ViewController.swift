@@ -1,6 +1,6 @@
 import UIKit
 import MetalKit
-import Tg3dSDK_iOS
+import Tg3dMobileScanSDK_iOS
 import SceneKit
 import ZIPFoundation
 import AVFoundation
