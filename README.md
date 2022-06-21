@@ -31,11 +31,11 @@ sdk.currentRegion() { (rc, baseUrl) in
 ## Scan flows
 
 0. [User sign-in](#signin)
-1. [initMobileScan()](#initmobilescan)
-2. [prepareForRecord()](#prepareforrecord)
-3. [startRecordingBody()](#startrecordingbody)
-4. [stopRecording()](#stoprecording)
-5. [uploadScans()](#uploadscans)
+1. Call [initMobileScan()](#initmobilescan) to init mobile scan transaction.
+2. Call [prepareForRecord()](#prepareforrecord) to prepare view for camera.
+3. Call [startRecordingBody()](#startrecordingbody) to start scan.
+4. Call [stopRecording()](#stoprecording) to stop scan.
+5. Call [uploadScans()](#uploadscans) to upload scan.
 
 NOTE 1: You will need scanner id and session key while doing mobile scan.
 
@@ -206,7 +206,7 @@ public func listScanRecords(offset: Int,
 
 #### initMobileScan()
 
-Initiate a mobile scan.
+Initiate a mobile scan transaction.
 
 ```swift
 @objc
