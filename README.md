@@ -346,11 +346,11 @@ pod 'I3DRecorder', :git => 'https://github.com/in3D-io/in3D-iOS-SDK.git', :commi
 
 ## Installation
 
-Tg3dSDK-iOS is available through [CocoaPods](https://cocoapods.org). To install
+Tg3dMobileScanSDK-iOS is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'Tg3dSDK-iOS'
+pod 'Tg3dMobileScanSDK-iOS'
 ```
 
 ## Author
