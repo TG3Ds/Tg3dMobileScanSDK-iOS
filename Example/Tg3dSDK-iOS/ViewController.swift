@@ -248,7 +248,7 @@ class ViewController: UIViewController {
         let password: String = passwordInput.text ?? ""
         self.signinButton.isEnabled = false
         DispatchQueue.main.async {
-            self.sdk!.signin(accountId: email,
+            self.sdk!.signin(username: email,
                              password: password) { (rc) in
                 print(String(format: "signin(), rc = %d", rc))
                 if rc == 0 {
@@ -490,7 +490,7 @@ class ViewController: UIViewController {
                 self.registerButton.isEnabled = true
                 return
             }
-            self.sdk!.signin(accountId: email,
+            self.sdk!.signin(username: email,
                              password: password) { (rc) in
                 print(String(format: "signin(), rc = %d", rc))
                 if rc == 0 {

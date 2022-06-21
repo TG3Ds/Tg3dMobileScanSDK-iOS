@@ -13,7 +13,7 @@ class Tg3dSDKSpec: QuickSpec {
                 self.sdk = TG3DMobileScan(apiKey: "",
                                           baseUrl: "https://apidev.tg3ds.com")
                 waitUntil(timeout: .seconds(30)) { done in
-                    self.sdk!.signin(accountId: "",
+                    self.sdk!.signin(username: "",
                                      password: "") { (rc) in
                         expect(rc).to(equal(0))
                         done()

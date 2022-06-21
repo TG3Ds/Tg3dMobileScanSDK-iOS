@@ -155,7 +155,7 @@ func retrieveRegion(useDev: Bool = false, completion: @escaping (Int, String?) -
 public class TG3DMobileScan: NSObject {
     @objc public var apiKey: String
     @objc public var baseUrl: String
-    @objc public var accountId: String
+    @objc public var username: String
     @objc public var authToken: String
     @objc public var accessToken: String
     @objc public var lastErrorCode: Int
@@ -173,7 +173,7 @@ public class TG3DMobileScan: NSObject {
     public init(apiKey: String, baseUrl: String = "https://api.tg3ds.com") {
         self.apiKey = apiKey
         self.baseUrl = baseUrl
-        self.accountId = ""
+        self.username = ""
         self.authToken = ""
         self.accessToken = ""
         self.lastErrorCode = -1
@@ -408,13 +408,13 @@ public class TG3DMobileScan: NSObject {
         }
     }
 
-    func doSignin(accountId: String,
+    func doSignin(username: String,
                   password: String,
                   completion: @escaping (Int, String?) -> ()) {
         let url = String(format:"%@/api/v1/users/signin?apikey=%@", arguments:[self.baseUrl, self.apiKey])
         do {
             let header = [ String: String ]()
-            let body = [ "username": accountId, "password": password ]
+            let body = [ "username": username, "password": password ]
             try self.doAPIHttpPost(url: url, header: header, body: body) { (rc, data, response) in
                 if rc != 0 {
                     completion(rc, nil)
@@ -458,13 +458,13 @@ public class TG3DMobileScan: NSObject {
         }
     }
 
-    func doAuth(accountId: String,
+    func doAuth(username: String,
                 authToken: String,
                 completion: @escaping (Int, String?) -> ()) {
         let url = String(format:"%@/api/v1/users/auth?apikey=%@", arguments:[self.baseUrl, self.apiKey])
         do {
             let header = [ String: String ]()
-            let body = [ "username": accountId, "auth_token": authToken, "provider": 0 ] as [String : Any]
+            let body = [ "username": username, "auth_token": authToken, "provider": 0 ] as [String : Any]
             try self.doAPIHttpPost(url: url, header: header, body: body) { (rc, data, response) in
                 if rc != 0 {
                     completion(rc, nil)
@@ -785,16 +785,16 @@ public class TG3DMobileScan: NSObject {
     }
 
     @objc
-    public func signin(accountId: String,
+    public func signin(username: String,
                        password: String,
                        completion: @escaping (Int) -> ()) {
-        self.doSignin(accountId: accountId, password: password) { (rc, authToken) in
+        self.doSignin(username: username, password: password) { (rc, authToken) in
             if rc != 0 {
                 completion(rc)
                 return
             }
             self.authToken = authToken!
-            self.doAuth(accountId: accountId, authToken: authToken!) { (rc, accessToken) in
+            self.doAuth(username: username, authToken: authToken!) { (rc, accessToken) in
                 if rc != 0 {
                     completion(rc)
                     return
