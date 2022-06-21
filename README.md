@@ -359,4 +359,4 @@ TG3D Developer, tg3ddeveloper@tg3ds.com
 
 ## License
 
-Tg3dSDK-iOS is available under the MIT license. See the LICENSE file for more info.
+Tg3dMobileScanSDK-iOS is available under the MIT license. See the LICENSE file for more info.
