@@ -1,8 +1,8 @@
-# Tg3dSDK-iOS
+# Tg3dMobileScanSDK-iOS
 
 ## Introduction
 
-Tg3dSDK-iOS offers an easier way to connect with TG3D body scanning features for developing an iOS app. For mobile scanning, we also used In3D iOS SDK. All APIs write in swift, but all APIs and data structures are compatable with objective-c.
+Tg3dMobileScanSDK-iOS offers an easier way to connect with TG3D body scanning features for developing an iOS app. For mobile scanning, we also used In3D iOS SDK. All APIs write in swift, but all APIs and data structures are compatable with objective-c.
 
 For more details, you may check TG3D Scan APIs (https://mtm.tg3ds.com).
 
