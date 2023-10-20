@@ -1,3 +1,5 @@
+# ==== DEPRECATED ====
+
 # Tg3dMobileScanSDK-iOS
 
 ## Introduction
